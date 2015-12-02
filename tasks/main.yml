@@ -1,2 +1,54 @@
 ---
 # tasks file for shinken
+
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_distribution }}.yml"
+  tags: shinken
+
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: shinken
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: shinken
+
+- include: FreeBSD.yml
+  when: ansible_distribution == "FreeBSD"
+  tags: shinken
+
+- name: Add Shinken system user
+  user: >
+    name=shinken
+    createhome=no
+    system=yes
+    state=present
+  tags: shinken
+
+- name: Install pip and pycurl
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - python-pip
+    - python-pycurl
+  tags: shinken
+
+- name: Install Shinken
+  pip: >
+    name=shinken
+    version={{ shinken_version }}
+    state=present
+  tags: shinken
+
+- name: Create Shiken main configuration file
+  template: >
+    src=shinken.cfg.j2
+    dest=/etc/shinken/shinken.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: restart shinken
+  tags: shinken
+
+- name: Ensure Shinken service is started and enabled on boot
+  service: name={{ shinken_service_name }} state=started enabled=yes
+  tags: shinken

@@ -1,2 +1,12 @@
 ---
 # vars file for shinken
+
+shinken_service_name: shinken
+
+shinken_pack_distribution_file: /var/lib/shinken/pack_distribution.dat
+shinken_workdir: /var/lib/shinken/
+shinken_lock_file: /var/run/shinken/arbiterd.pid
+shinken_local_log: /var/log/shinken/arbiterd.log
+shinken_user: shinken
+shinken_group: shinken
+shinken_modules_dir: /var/lib/shinken/modules

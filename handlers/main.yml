@@ -1,2 +1,6 @@
 ---
 # handlers file for shinken
+
+- name: restart shinken
+  service: name={{ shinken_service_name }} state=restarted
+  tags: shinken

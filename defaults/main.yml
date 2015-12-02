@@ -1,2 +1,19 @@
 ---
 # defaults file for shinken
+
+shinken_version: 2.4.2
+
+shinken_disable_old_nagios_parameters_whining: 0
+shinken_enable_environment_macros: 0
+shinken_enable_problem_impacts_states_change: 1
+shinken_flap_history: 20
+shinken_log_initial_states: 0
+shinken_log_level: ''
+shinken_max_host_check_spread: 5
+shinken_max_plugins_output_length: 65536
+shinken_max_service_check_spread: 5
+shinken_no_event_handlers_during_downtimes: 1
+shinken_retention_update_interval: 60
+shinken_service_check_timeout: 60
+shinken_timeout_exit_status: 2
+shinken_use_timezone: ''
