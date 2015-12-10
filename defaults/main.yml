@@ -17,3 +17,19 @@ shinken_retention_update_interval: 60
 shinken_service_check_timeout: 60
 shinken_timeout_exit_status: 2
 shinken_use_timezone: ''
+
+shinken_modules:
+  - auth-cfg-password
+  - webui
+
+shinken_module_webui_host: 0.0.0.0
+shinken_module_webui_port: 7767
+shinken_module_webui_auth_secret: TOCHANGE
+shinken_module_webui_allow_html_output: 0
+shinken_module_webui_login_text: Welcome on Shinken WebUI
+shinken_module_webui_http_backend: auto
+shinken_module_webui_max_output_length: 1024
+shinken_module_webui_manage_acl: 1
+shinken_module_webui_play_sound: 0
+shinken_module_webui_remote_user_enable: 0
+shinken_module_webui_remote_user_variable: false

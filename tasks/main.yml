@@ -20,16 +20,8 @@
 - name: Add Shinken system user
   user: >
     name=shinken
-    createhome=no
-    system=yes
+    createhome=yes
     state=present
-  tags: shinken
-
-- name: Install pip and pycurl
-  apt: name={{ item }} state=present update_cache=yes
-  with_items:
-    - python-pip
-    - python-pycurl
   tags: shinken
 
 - name: Install Shinken
@@ -39,6 +31,25 @@
     state=present
   tags: shinken
 
+- name: Initialize Shinken
+  become: yes
+  become_user: shinken
+  become_method: sudo
+  command: shinken --init
+  args:
+    creates: /home/shinken/.shinken.ini
+  tags: shinken
+
+- name: Install Shinken modules
+  become: yes
+  become_user: shinken
+  become_method: sudo
+  command: shinken install {{ item }}
+  args:
+    creates: /var/lib/shinken/modules/{{ item }}
+  with_items: shinken_modules
+  tags: shinken
+
 - name: Create Shiken main configuration file
   template: >
     src=shinken.cfg.j2
@@ -46,6 +57,27 @@
     owner=shinken
     group=shinken
     mode=0644
+  notify: restart shinken
+  tags: shinken
+
+- name: Create Shinken broker master configuration file
+  template: >
+    src=brokers/broker-master.cfg.j2
+    dest=/etc/shinken/brokers/broker-master.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: restart shinken
+  tags: shinken
+
+- name: Create Shinken webui module configuration file
+  template: >
+    src=modules/webui.cfg.j2
+    dest=/etc/shinken/modules/webui.cfg
+    owner=shinken
+    group=shinken
+    mode=0640
+  when: "'webui' in shinken_modules"
   notify: restart shinken
   tags: shinken
 

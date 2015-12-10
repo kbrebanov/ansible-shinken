@@ -1,2 +1,14 @@
 ---
 # tasks file for shinken (Ubuntu specific)
+
+- name: Install Shinken dependencies
+  apt: name={{ item }} state=present update_cache=yes
+  with_items:
+    - python-pip
+    - python-pycurl
+    - python-cherrypy3
+  tags: shinken
+
+- name: Install monitoring plugins
+  apt: name=nagios-plugins state=present update_cache=yes
+  tags: shinken
