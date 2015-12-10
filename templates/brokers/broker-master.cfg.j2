@@ -43,6 +43,9 @@ define broker {
 {% if 'webui' in shinken_modules %}
 {% set ignored = broker_modules.extend(['webui']) %}
 {% endif %}
+{% if 'webui2' in shinken_modules %}
+{% set ignored = broker_modules.extend(['webui2']) %}
+{% endif %}
 {% if broker_modules %}
     modules        {{ broker_modules | join(',') }}
 {% else %}

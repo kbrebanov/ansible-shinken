@@ -19,17 +19,22 @@ shinken_timeout_exit_status: 2
 shinken_use_timezone: ''
 
 shinken_modules:
-  - auth-cfg-password
-  - webui
+  - webui2
 
-shinken_module_webui_host: 0.0.0.0
-shinken_module_webui_port: 7767
-shinken_module_webui_auth_secret: TOCHANGE
-shinken_module_webui_allow_html_output: 0
-shinken_module_webui_login_text: Welcome on Shinken WebUI
-shinken_module_webui_http_backend: auto
-shinken_module_webui_max_output_length: 1024
-shinken_module_webui_manage_acl: 1
-shinken_module_webui_play_sound: 0
-shinken_module_webui_remote_user_enable: 0
-shinken_module_webui_remote_user_variable: false
+shinken_module_webui2_host: 0.0.0.0
+shinken_module_webui2_port: 7767
+shinken_module_webui2_htpasswd_file: /etc/shinken/htpasswd.users
+shinken_module_webui2_auth_secret: CHANGEME
+shinken_module_webui2_login_text: Login to the Shinken WebUI - Live System
+shinken_module_webui2_allow_html_output: 1
+shinken_module_webui2_tag_as_image: 0
+shinken_module_webui2_play_sound: 0
+shinken_module_webui2_gravatar: 0
+shinken_module_webui2_refresh_period: 60
+shinken_module_webui2_hosts_states_warning: 95
+shinken_module_webui2_hosts_states_critical: 90
+shinken_module_webui2_services_states_warning: 95
+shinken_module_webui2_services_states_critical: 90
+shinken_module_webui2_timezone: Europe/Paris
+shinken_module_webui2_manage_acl: 1
+shinken_module_webui2_allow_anonymous: 0

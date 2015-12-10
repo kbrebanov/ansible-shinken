@@ -17,7 +17,7 @@ Role Variables
 Dependencies
 ------------
 
-None
+- kbrebanov.mongodb (When webui2 is Shinken modules list)
 
 Example Playbook
 ----------------

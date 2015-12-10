@@ -17,7 +17,7 @@
   when: ansible_distribution == "FreeBSD"
   tags: shinken
 
-- name: Add Shinken system user
+- name: Create Shinken user
   user: >
     name=shinken
     createhome=yes
@@ -29,6 +29,15 @@
     name=shinken
     version={{ shinken_version }}
     state=present
+  tags: shinken
+
+- name: Install Shinken WebUI2 dependencies
+  pip: >
+    name={{ item.key }}
+    version={{ item.value.version }}
+    state=present
+  with_dict: shinken_module_webui2_dependencies
+  when: "'webui2' in shinken_modules"
   tags: shinken
 
 - name: Initialize Shinken
@@ -70,14 +79,14 @@
   notify: restart shinken
   tags: shinken
 
-- name: Create Shinken webui module configuration file
+- name: Create Shinken WebUI2 module configuration file
   template: >
-    src=modules/webui.cfg.j2
-    dest=/etc/shinken/modules/webui.cfg
+    src=modules/webui2.cfg.j2
+    dest=/etc/shinken/modules/webui2.cfg
     owner=shinken
     group=shinken
     mode=0640
-  when: "'webui' in shinken_modules"
+  when: "'webui2' in shinken_modules"
   notify: restart shinken
   tags: shinken
 
