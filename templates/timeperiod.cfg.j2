@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+define timeperiod {
+{% for key, value in item.iteritems() %}
+    {{ key }} {{ value }}
+{% endfor %}
+}

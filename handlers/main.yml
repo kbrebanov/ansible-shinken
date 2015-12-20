@@ -4,3 +4,7 @@
 - name: restart shinken
   service: name={{ shinken_service_name }} state=restarted
   tags: shinken
+
+- name: reload shinken
+  service: name={{ shinken_service_name }} state=reloaded
+  tags: shinken

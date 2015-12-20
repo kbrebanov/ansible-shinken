@@ -69,14 +69,174 @@
   notify: restart shinken
   tags: shinken
 
-- name: Create Shinken broker master configuration file
+- name: Create Shinken broker configurations
   template: >
-    src=brokers/broker-master.cfg.j2
-    dest=/etc/shinken/brokers/broker-master.cfg
+    src=broker.cfg.j2
+    dest=/etc/shinken/brokers/{{ item.broker_name }}.cfg
     owner=shinken
     group=shinken
     mode=0644
   notify: restart shinken
+  with_items: shinken_brokers
+  tags: shinken
+
+- name: Create Shinken arbiter configurations
+  template: >
+    src=arbiter.cfg.j2
+    dest=/etc/shinken/arbiters/{{ item.arbiter_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: restart shinken
+  with_items: shinken_arbiters
+  tags: shinken
+
+- name: Create Shinken scheduler configurations
+  template: >
+    src=scheduler.cfg.j2
+    dest=/etc/shinken/schedulers/{{ item.scheduler_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: restart shinken
+  with_items: shinken_schedulers
+  tags: shinken
+
+- name: Create Shinken poller configurations
+  template: >
+    src=poller.cfg.j2
+    dest=/etc/shinken/pollers/{{ item.poller_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: restart shinken
+  with_items: shinken_pollers
+  tags: shinken
+
+- name: Create Shinken reactionner configurations
+  template: >
+    src=reactionner.cfg.j2
+    dest=/etc/shinken/reactionners/{{ item.reactionner_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: restart shinken
+  with_items: shinken_reactionners
+  tags: shinken
+
+- name: Create template configurations
+  template: >
+    src=templates/{{ item }}.cfg.j2
+    dest=/etc/shinken/templates/{{ item }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items:
+    - generic-contact
+    - generic-host
+    - generic-service
+    - srv-pnp
+    - time_templates
+  tags: shinken
+
+- name: Create realm configurations
+  template: >
+    src=realm.cfg.j2
+    dest=/etc/shinken/realms/{{ item.realm_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_realms
+  tags: shinken
+
+- name: Create timeperiod configurations
+  template: >
+    src=timeperiod.cfg.j2
+    dest=/etc/shinken/timeperiods/{{ item.timeperiod_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_timeperiods
+  tags: shinken
+
+- name: Create hostgroup configurations
+  template: >
+    src=hostgroup.cfg.j2
+    dest=/etc/shinken/hostgroups/{{ item.hostgroup_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_hostgroups
+  tags: shinken
+
+- name: Create host configurations
+  template: >
+    src=host.cfg.j2
+    dest=/etc/shinken/hosts/{{ item.host_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_hosts
+  tags: shinken
+
+- name: Create servicegroup configurations
+  template: >
+    src=servicegroup.cfg.j2
+    dest=/etc/shinken/servicegroups/{{ item.servicegroup_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_servicegroups
+  tags: shinken
+
+- name: Create service configurations
+  template: >
+    src=service.cfg.j2
+    dest=/etc/shinken/services/{{ item.service_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_services
+  tags: shinken
+
+- name: Create contactgroup configurations
+  template: >
+    src=contactgroup.cfg.j2
+    dest=/etc/shinken/contactgroups/{{ item.contactgroup_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_contactgroups
+  tags: shinken
+
+- name: Create contact configurations
+  template: >
+    src=contact.cfg.j2
+    dest=/etc/shinken/contacts/{{ item.contact_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_contacts
+  tags: shinken
+
+- name: Create command configurations
+  template: >
+    src=command.cfg.j2
+    dest=/etc/shinken/commands/{{ item.command_name }}.cfg
+    owner=shinken
+    group=shinken
+    mode=0644
+  notify: reload shinken
+  with_items: shinken_commands
   tags: shinken
 
 - name: Create Shinken WebUI2 module configuration file

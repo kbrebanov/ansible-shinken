@@ -38,3 +38,191 @@ shinken_module_webui2_services_states_critical: 90
 shinken_module_webui2_timezone: Europe/Paris
 shinken_module_webui2_manage_acl: 1
 shinken_module_webui2_allow_anonymous: 0
+
+shinken_arbiters:
+  - arbiter_name: arbiter-master
+    address: localhost
+    port: 7770
+    spare: 0
+    use_ssl: 0
+    hard_ssl_name_check: 0
+
+shinken_brokers:
+  - broker_name: broker-master
+    address: localhost
+    port: 7772
+    spare: 0
+    manage_arbiters: 1
+    manage_sub_realms: 1
+    timeout: 3
+    data_timeout: 120
+    max_check_attempts: 3
+    check_interval: 60
+    modules: webui2
+    use_ssl: 0
+    hard_ssl_name_check: 0
+    realm: All
+
+shinken_schedulers:
+  - scheduler_name: scheduler-master
+    address: localhost
+    port: 7768
+    spare: 0
+    weight: 1
+    timeout: 3
+    data_timeout: 120
+    max_check_attempts: 3
+    check_interval: 60
+    realm: All
+    skip_initial_broks: 0
+    use_ssl: 0
+    hard_ssl_name_check: 0
+
+shinken_pollers:
+  - poller_name: poller-master
+    address:  localhost
+    port: 7771
+    spare: 0
+    manage_sub_realms: 0
+    min_workers: 0
+    max_workers: 0
+    processes_by_worker: 256
+    polling_interval: 1
+    timeout: 3
+    data_timeout: 120
+    max_check_attempts: 3
+    check_interval: 60
+    use_ssl: 0
+    hard_ssl_name_check: 0
+    realm: All
+
+shinken_reactionners:
+  - reactionner_name: reactionner-master
+    address: localhost
+    port: 7769
+    spare: 0
+    manage_sub_realms: 0
+    min_workers: 1
+    max_workers: 15
+    polling_interval: 1
+    timeout: 3
+    data_timeout: 120
+    max_check_attempts: 3
+    check_interval: 60
+    use_ssl: 0
+    hard_ssl_name_check: 0
+    realm: All
+
+shinken_realms:
+  - realm_name: All
+    default: 1
+
+shinken_contacts:
+  - use: generic-contact
+    contact_name: admin
+    email: shinken@localhost
+    pager: 0600000000
+    password: admin
+    is_admin: 1
+    expert: 1
+  - use: generic-contact
+    contact_name: guest
+    email: guest@localhost
+    password: guest
+    can_submit_commands: 0
+
+shinken_hostgroups:
+  - hostgroup_name: linux
+    alias: Linux Servers
+
+shinken_hosts:
+  - host_name: localhost
+    address: localhost
+    contact_groups: admins
+    use: generic-host
+
+shinken_servicegroups: []
+
+shinken_services: []
+
+shinken_timeperiods:
+  - timeperiod_name: 24x7
+    alias: Always
+    sunday: "00:00-24:00"
+    monday: "00:00-24:00"
+    tuesday: "00:00-24:00"
+    wednesday: "00:00-24:00"
+    thursday: "00:00-24:00"
+    friday: "00:00-24:00"
+    saturday: "00:00-24:00"
+  - timeperiod_name: none
+    alias: No Time Is A Good Time
+  - timeperiod_name: us-holidays
+    alias: U.S. Holidays
+    "january 1": "00:00-00:00"
+    "monday -1 may": "00:00-00:00"
+    "july 4": "00:00-00:00"
+    "monday 1 september": "00:00-00:00"
+    "thursday -1 november": "00:00-00:00"
+    "december 25": "00:00-00:00"
+  - timeperiod_name: workhours
+    alias: Normal Work Hours
+    monday: "09:00-17:00"
+    tuesday: "09:00-17:00"
+    wednesday: "09:00-17:00"
+    thursday: "09:00-17:00"
+    friday: "09:00-17:00"
+
+shinken_contactgroups:
+  - contactgroup_name: admins
+    alias: admins
+    members: admin
+  - contactgroup_name: users
+    alias: users
+    members: admin
+
+shinken_commands:
+  - command_name: check_dig
+    command_line: $NAGIOSPLUGINSDIR$/check_dig -H $HOSTADDRESS$ -l $ARG1$
+  - command_name: check_host_alive
+    command_line: $NAGIOSPLUGINSDIR$/check_ping -H $HOSTADDRESS$ -w 1000,100% -c 3000,100% -p 1
+  - command_name: check_nrpe_args
+    command_line: $NAGIOSPLUGINSDIR$/check_nrpe -H $HOSTADDRESS$ -t 9 -u -c $ARG1$ -a $ARG2$ $ARG3$ $ARG4$ $ARG5$
+  - command_name: check_nrpe
+    command_line: $NAGIOSPLUGINSDIR$/check_nrpe -H $HOSTADDRESS$ -t 9 -u -c $ARG1$
+  - command_name: check_ping
+    command_line: $NAGIOSPLUGINSDIR$/check_icmp -H $HOSTADDRESS$ -w 3000,100% -c 5000,100% -p 10
+  - command_name: check_snmp_service
+    command_line: $NAGIOSPLUGINSDIR$/check_snmp_service -H $HOSTADDRESS$ -C $SNMPCOMMUNITYREAD$
+  - command_name: check_snmp_storage
+    command_line: $NAGIOSPLUGINSDIR$/check_snmp_storage.pl -H $HOSTADDRESS$ -C $SNMPCOMMUNITYREAD$ -m $ARG1$ -f -w $ARG2$ -c $ARG3$ -S0,1 -o 65535
+  - command_name: check_snmp_time
+    command_line: $NAGIOSPLUGINSDIR$/check_snmp_time.pl -H $HOSTADDRESS$ -C $SNMPCOMMUNITYREAD$ -f -w $ARG1$ -c $ARG2$
+  - command_name: check_tcp
+    command_line: $NAGIOSPLUGINSDIR$/check_tcp -H $HOSTADDRESS$ -p $ARG1$
+  - command_name: configuration-check
+    command_line: sudo /etc/init.d/shinken check
+  - command_name: detailled-host-by-email
+    command_line: $PLUGINSDIR$/notify_by_email.py -n host -S localhost -r $CONTACTEMAIL$ -f html -c "$NOTIFICATIONTYPE$,,$HOSTNAME$,,$HOSTADDRESS$,,$LONGDATETIME$"" -o ""$HOSTSTATE$,,$HOSTDURATION$" -d "$_HOSTDETAILLEDDESC$" -i "$_HOSTIMPACT$"
+  - command_name: detailled-service-by-email
+    command_line: $PLUGINSDIR$/notify_by_email.py -n service -S localhost -r $CONTACTEMAIL$ -f html -c "$NOTIFICATIONTYPE$,,$HOSTNAME$,,$HOSTADDRESS$,,$LONGDATETIME$" -o "$SERVICEDESC$,,$SERVICESTATE$,,$SERVICEOUTPUT$,,$SERVICEDURATION$" -d "$_SERVICEDETAILLEDESC$" -i "$_SERVICEIMPACT$" -a "$_SERVICEFIXACTIONS$"
+  - command_name: notify-host-by-android-sms
+    command_line: "android_sms $CONTACTPAGER$ Host: $HOSTNAME$\nAddress: $HOSTADDRESS$\nState: $HOSTSTATE$\nInfo: $OUTPUT$\nDate: $DATETIME$"
+    reactionner_tag: android_sms
+    module_type: android_sms
+  - command_name: notify-host-by-email
+    command_line: $PLUGINSDIR$/notify_by_email.py -n host -S localhost -r $CONTACTEMAIL$ -f html -c "$NOTIFICATIONTYPE$,,$HOSTNAME$,,$HOSTADDRESS$,,$LONGDATETIME$" -o "$HOSTALIAS$,,$HOSTSTATE$,,$HOSTDURATION$"
+  - command_name: notify-host-by-xmpp
+    command_line: $PLUGINSDIR$/notify_by_xmpp.py -a $PLUGINSDIR$/notify_by_xmpp.ini "Host '$HOSTNAME$' is $HOSTSTATE$ - Info ':' $HOSTOUTPUT$" $CONTACTEMAIL$
+  - command_name: notify-service-by-android-sms
+    command_line: "android_sms $CONTACTPAGER$ Service: $SERVICEDESC$\nHost: $HOSTNAME$\nAddress: $HOSTADDRESS$\nState: $SERVICESTATE$\nInfo: $OUTPUT$\nDate: $DATETIME$"
+    reactionner_tag: android_sms
+    module_type: android_sms
+  - command_name: notify-service-by-email
+    command_line: $PLUGINSDIR$/notify_by_email.py -n service -S localhost -r $CONTACTEMAIL$ -f html -c "$NOTIFICATIONTYPE$,,$HOSTNAME$,,$HOSTADDRESS$,,$LONGDATETIME$" -o "$SERVICEDESC$,,$SERVICESTATE$,,$SERVICEOUTPUT$,,$SERVICEDURATION$"
+  - command_name: notify-service-by-xmpp
+    command_line: $PLUGINSDIR$/notify_by_xmpp.py -a $PLUGINSDIR$/notify_by_xmpp.ini "$NOTIFICATIONTYPE$ $HOSTNAME$ $SERVICEDESC$ $SERVICESTATE$ $SERVICEOUTPUT$ $LONGDATETIME$" $CONTACTEMAIL$
+  - command_name: reload-shinken
+    command_line: /etc/init.d/shinken reload
+  - command_name: restart-shinken
+    command_line: /etc/init.d/shinken restart

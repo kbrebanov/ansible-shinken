@@ -1,0 +1,7 @@
+# {{ ansible_managed }}
+
+define reactionner {
+{% for key, value in item.iteritems() %}
+    {{ key }} {{ value }}
+{% endfor %}
+}
